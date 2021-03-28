@@ -46,7 +46,7 @@
             });
             map.addLayer(
                 {
-                    'id': 'trace-points',
+                    'id': 'value',
                     'type': 'circle',
                     'source': 'trace',
                     'source-layer': 'default',
@@ -58,15 +58,37 @@
                             ['get', 'val'],
                             0,
                             'white',
-                            150000,
-                            'red'
-
+                            35000,
+                            'pink',
+                            50000,
+                            'red',
                         ],
                         'circle-stroke-color': '#000'
                     },
                 },
-                'waterway-label'
             );
+            // map.addLayer(
+            //     {
+            //         'id': 'count',
+            //         'type': 'circle',
+            //         'source': 'trace',
+            //         'source-layer': 'default',
+            //         type: 'circle',
+            //         paint: {
+            //             'circle-color': [
+            //                 'interpolate',
+            //                 ['linear'],
+            //                 ['get', 'count'],
+            //                 0,
+            //                 'white',
+            //                 15,
+            //                 'red'
+
+            //             ],
+            //             'circle-stroke-color': '#000'
+            //         },
+            //     },
+            // );
 
             // Hide all labels
             map.getStyle().layers
