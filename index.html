@@ -29,7 +29,7 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiYWx1a2FjaCIsImEiOiJ3US1JLXJnIn0.xrpBHCwvzsX76YlO-08kjg'; // alukach's token
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/light-v10',
+            style: 'mapbox://styles/mapbox/dark-v10',
             zoom: 20,
             center: [0, 0],
             hash: true
@@ -53,19 +53,26 @@
                     type: 'circle',
                     paint: {
                         'circle-color': [
-                            'step',
-                            ['get', 'point_count'],
-                            '#51bbd6',
-                            100,
-                            '#f1f075',
-                            750,
-                            '#f28cb1'
+                            'interpolate',
+                            ['linear'],
+                            ['get', 'val'],
+                            0,
+                            'white',
+                            150000,
+                            'red'
+
                         ],
                         'circle-stroke-color': '#000'
                     },
                 },
                 'waterway-label'
             );
+
+            // Hide all labels
+            map.getStyle().layers
+                .map(layer => layer.id)
+                .filter(id => id.endsWith('label'))
+                .map(id => map.setLayoutProperty(id, 'visibility', 'none'));
         });
 
         map.addControl(new mapboxgl.NavigationControl());
