@@ -1,6 +1,6 @@
 # Gridded Points Playground
 
-This repo demonstrates how we can create a DB with 1M randomly generated points, snap them to a grid and in a materialized view, serve them via MVT + FastAPI, and render them via MapboxGL.
+This repo demonstrates how we can create a DB with 1M randomly generated points, snap them to a grid in a materialized view, serve them via MVT + FastAPI, and render them via MapboxGL.
 
 ![](preview.png)
 
