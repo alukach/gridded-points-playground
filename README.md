@@ -5,7 +5,7 @@
 ### Database
 
 ```sh
-./bootstrap.sh
+make create_db && make
 ```
 
 ### API
