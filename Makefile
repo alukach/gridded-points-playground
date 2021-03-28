@@ -1,7 +1,7 @@
-DB_NAME='trace-demo'
+DB_NAME='gridded-points'
 COUNTRIES_DIR='./countries'
 
-.PHONY: all create_db load_countries setup_db
+.PHONY: all create_db load_countries setup_db runserver
 
 all: countries/archive/countries.geojson load_countries setup_db
 
@@ -33,5 +33,5 @@ load_countries: countries/archive/countries.geojson
 		--config OGR_TRUNCATE YES \
 		--config OGR_ENABLE_PARTIAL_REPROJECTION TRUE
 
-clean:
-	dropdb ${DB_NAME}
+runserver:
+	DB_NAME=${DB_NAME} uvicorn main:app --reload

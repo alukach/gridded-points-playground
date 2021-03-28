@@ -1,3 +1,4 @@
+import os
 from typing import Optional
 
 from fastapi import FastAPI, Depends, Path, Response
@@ -11,7 +12,7 @@ app = FastAPI()
 
 
 async def get_db_conn():
-    DB_NAME = "trace-demo"
+    DB_NAME = os.environ['DB_NAME']
     conn = await asyncpg.connect(f"postgresql://localhost/{DB_NAME}")
     yield conn
     await conn.close()

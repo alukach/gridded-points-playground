@@ -1,4 +1,6 @@
-# TRACE Demo App
+# Gridded Points Playground
+
+![](preview.png)
 
 ## Setup 
 

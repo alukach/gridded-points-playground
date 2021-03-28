@@ -36,10 +36,10 @@
         });
 
         map.on('load', function () {
-            map.addSource('trace', {
+            map.addSource('gridded-points', {
                 'type': 'vector',
                 'tiles': [
-                    'http://localhost:8000/tiles/{z}/{x}/{y}.pbf'
+                    `${window.location.origin}/tiles/{z}/{x}/{y}.pbf`
                 ],
                 'maxzoom': 14,
                 'cluster': true,
@@ -48,7 +48,7 @@
                 {
                     'id': 'value',
                     'type': 'circle',
-                    'source': 'trace',
+                    'source': 'gridded-points',
                     'source-layer': 'default',
                     type: 'circle',
                     paint: {
@@ -71,7 +71,7 @@
             //     {
             //         'id': 'count',
             //         'type': 'circle',
-            //         'source': 'trace',
+            //         'source': 'gridded-points',
             //         'source-layer': 'default',
             //         type: 'circle',
             //         paint: {
