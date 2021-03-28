@@ -37,7 +37,7 @@ class TileParams(BaseModel):
     response_class=Response,
 )
 async def tile(conn: asyncpg.Connection = Depends(get_db_conn), t: TileParams = Depends()):
-    table = 'measurements'
+    table = 'country_measurements'
     query = f"""
     WITH
         tile AS (
