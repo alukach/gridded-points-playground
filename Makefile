@@ -1,5 +1,6 @@
 DB_NAME='gridded-points'
 COUNTRIES_DIR='./countries'
+VENV_DIR='./.venv'
 
 .PHONY: all create_db load_countries setup_db runserver
 
@@ -33,5 +34,10 @@ load_countries: countries/archive/countries.geojson
 		--config OGR_TRUNCATE YES \
 		--config OGR_ENABLE_PARTIAL_REPROJECTION TRUE
 
-runserver:
-	DB_NAME=${DB_NAME} uvicorn main:app --reload
+.venv/bin/activate:
+	@echo "Setting up virtualenv..."
+	python3 -m venv .venv
+
+runserver: .venv/bin/activate
+	$(VENV_DIR)/bin/pip install -r requirements.txt
+	DB_NAME=${DB_NAME} $(VENV_DIR)/bin/uvicorn main:app --reload
