@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Add a third party vector tile source</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        // https://docs.mapbox.com/mapbox-gl-js/example/third-party/
+        mapboxgl.accessToken = 'pk.eyJ1IjoiYWx1a2FjaCIsImEiOiJ3US1JLXJnIn0.xrpBHCwvzsX76YlO-08kjg'; // alukach's token
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/light-v10',
+            zoom: 20,
+            center: [0, 0],
+            hash: true
+        });
+
+        map.on('load', function () {
+            map.addSource('trace', {
+                'type': 'vector',
+                'tiles': [
+                    'http://localhost:8000/tiles/{z}/{x}/{y}.pbf'
+                ],
+                'maxzoom': 14,
+                'cluster': true,
+            });
+            map.addLayer(
+                {
+                    'id': 'trace-points',
+                    'type': 'circle',
+                    'source': 'trace',
+                    'source-layer': 'default',
+                    type: 'circle',
+                    paint: {
+                        'circle-color': [
+                            'step',
+                            ['get', 'point_count'],
+                            '#51bbd6',
+                            100,
+                            '#f1f075',
+                            750,
+                            '#f28cb1'
+                        ],
+                        'circle-stroke-color': '#000'
+                    },
+                },
+                'waterway-label'
+            );
+        });
+
+        map.addControl(new mapboxgl.NavigationControl());
+    </script>
+
+</body>
+
+</html>
