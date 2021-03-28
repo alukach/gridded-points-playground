@@ -2,6 +2,15 @@ DROP MATERIALIZED VIEW IF EXISTS country_measurements;
 
 DROP TABLE IF EXISTS measurements;
 
+-- NOTE: Clip to avoid "ERROR:  transform: tolerance condition error (-20)"
+UPDATE
+    countries
+SET
+    wkb_geometry = ST_Intersection(
+        wkb_geometry,
+        'SRID=4326;POLYGON((-179 -89, -179 89, 179 89, 179 -89, -179 -89))' :: geometry
+    );
+
 -- Set seed so random data is same every time we run this
 SET
     seed TO 1;
@@ -10,7 +19,7 @@ SET
 CREATE TABLE measurements (
     id SERIAL PRIMARY KEY,
     val INTEGER,
-    geom GEOMETRY(POINT, 3857)
+    geom GEOMETRY(POINT, 4326)
 );
 
 CREATE INDEX ON measurements USING GIST (geom);
@@ -19,10 +28,7 @@ CREATE INDEX ON measurements USING GIST (geom);
 WITH merged_countries AS (
     -- Merge all countries into single geometry
     SELECT
-        ST_Transform(
-            ST_Union(wkb_geometry),
-            3857
-        ) as geom
+        ST_Union(wkb_geometry) as geom
     FROM
         countries
     WHERE
@@ -50,22 +56,14 @@ VACUUM ANALYZE measurements;
 -- Create a materialized view joining the measurements to the countries in which they belong, 10k takes around 10m
 CREATE MATERIALIZED VIEW country_measurements AS (
     SELECT
-        measurements.*,
+        measurements.val,
+        ST_Transform(measurements.geom, 3857) as geom,
         countries.iso_a3 as country
     FROM
         measurements,
         countries
     WHERE
-        ST_Contains(
-            ST_Transform(
-                ST_Intersection(
-                    countries.wkb_geometry,
-                    'SRID=4326;POLYGON((-179 -89, -179 89, 179 89, 179 -89, -179 -89))' :: geometry -- NOTE: we need to clip or else we get "ERROR:  transform: tolerance condition error (-20)"
-                ),
-                3857
-            ),
-            measurements.geom
-        )
+        ST_Contains(countries.wkb_geometry, measurements.geom)
 );
 
 CREATE INDEX ON country_measurements USING GIST (geom);
