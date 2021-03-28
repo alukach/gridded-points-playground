@@ -2,17 +2,13 @@ DB_NAME='gridded-points'
 COUNTRIES_DIR='./countries'
 VENV_DIR='./.venv'
 
-.PHONY: all create_db load_countries setup_db runserver
+.PHONY: all create_db load_countries setup_db runserver install_dependencies
 
-all: countries/archive/countries.geojson load_countries setup_db
+all: create_db load_countries setup_db runserver
 
 create_db:
 	createdb ${DB_NAME}
 	psql ${DB_NAME} -c "CREATE EXTENSION postgis;"
-
-setup_db:
-	@echo "Loading countries..."
-	cat db.sql | psql ${DB_NAME}
 
 countries/archive/countries.geojson:
 	@echo "Fetching countries..."
@@ -34,10 +30,17 @@ load_countries: countries/archive/countries.geojson
 		--config OGR_TRUNCATE YES \
 		--config OGR_ENABLE_PARTIAL_REPROJECTION TRUE
 
+setup_db:
+	@echo "Preparing database (this can take ~15m)..."
+	cat db.sql | psql ${DB_NAME}
+
 .venv/bin/activate:
 	@echo "Setting up virtualenv..."
 	python3 -m venv .venv
 
-runserver: .venv/bin/activate
+install_dependencies: .venv/bin/activate
+	@echo "Installing dependencies..."
 	$(VENV_DIR)/bin/pip install -r requirements.txt
+
+runserver: install_dependencies
 	DB_NAME=${DB_NAME} $(VENV_DIR)/bin/uvicorn main:app --reload

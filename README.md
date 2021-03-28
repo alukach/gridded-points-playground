@@ -6,10 +6,10 @@ This repo demonstrates how we can create a DB with 1M randomly generated points,
 
 ## Setup 
 
-### Database
+Setup from scratch should be possible by running `make`:
 
 ```sh
-make create_db && make
+make
 ```
 
 ## Running
