@@ -42,12 +42,12 @@ SELECT
             ST_GeneratePoints(
                 merged_countries.geom,
                 -- Num of points to generate, 10K takes around 8s
-                10000,
+                100000,
                 1
             )
         )
     ).geom,
-    random() * 100000 AS val
+    random() * 1000 AS val
 from
     merged_countries;
 
