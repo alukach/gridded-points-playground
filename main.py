@@ -46,6 +46,7 @@ async def tile(conn: asyncpg.Connection = Depends(get_db_conn), t: TileParams = 
         t AS (
             SELECT
                 COUNT(*) as count,
+                SUM(val) as val,
                 ST_AsMVTGeom(geom, tile) as mvt
             FROM 
                 {table}, tile

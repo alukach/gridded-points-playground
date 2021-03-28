@@ -57,7 +57,10 @@ VACUUM ANALYZE measurements;
 CREATE MATERIALIZED VIEW country_measurements AS (
     SELECT
         measurements.val,
-        ST_Transform(measurements.geom, 3857) as geom,
+        ST_Transform(
+            ST_SnapToGrid(measurements.geom, 1),
+            3857
+        ) as geom,
         countries.iso_a3 as country
     FROM
         measurements,
