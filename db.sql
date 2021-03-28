@@ -41,8 +41,8 @@ SELECT
         ST_Dump(
             ST_GeneratePoints(
                 merged_countries.geom,
-                -- Num of points to generate, 10K takes around 8s
-                100000,
+                -- Num of points to generate, 1M takes around 18s
+                1000000,
                 1
             )
         )
@@ -53,7 +53,8 @@ from
 
 VACUUM ANALYZE measurements;
 
--- Create a materialized view joining the measurements to the countries in which they belong, 10k takes around 10m
+-- Create a materialized view joining the measurements to the countries in which they belong, 
+-- NOTE: 1M takes around 13m
 CREATE MATERIALIZED VIEW country_measurements AS (
     SELECT
         measurements.val,
